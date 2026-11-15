@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lumen</string>
+    
+    <string name="move_hint">◀ ▶ Przenieś · OK Gotowe</string>
+    <string name="safe_mode_notice">Tryb awaryjny · efekty wyłączone</string>
+</resources>

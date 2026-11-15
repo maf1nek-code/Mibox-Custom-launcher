@@ -1,0 +1,14 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/
+demo/build/
+
+# Signing keys, built APKs and local device state
+signing/
+*.keystore
+*.jks
+dist/
+tools/state/
