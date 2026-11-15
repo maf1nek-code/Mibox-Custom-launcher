@@ -1,6 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+// Signing key passwords live in local.properties (not in the repository).
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
 }
 
 android {
@@ -17,24 +25,32 @@ android {
 
     // One project-local key signs both build types, so debug and release
     // builds can be installed over each other without losing settings.
+    // The key and its passwords stay outside the repository: put
+    // lumen.storePassword and lumen.keyPassword in local.properties and the
+    // key in signing/lumen.keystore. Without them the default debug key is used.
+    val lumenKey = rootProject.file("signing/lumen.keystore")
+    val hasLumenKey = lumenKey.exists() && localProps.getProperty("lumen.storePassword") != null
+
     signingConfigs {
-        create("lumen") {
-            storeFile = rootProject.file("signing/lumen.keystore")
-            storePassword = "lumen-launcher"
-            keyAlias = "lumen"
-            keyPassword = "lumen-launcher"
+        if (hasLumenKey) {
+            create("lumen") {
+                storeFile = lumenKey
+                storePassword = localProps.getProperty("lumen.storePassword")
+                keyAlias = localProps.getProperty("lumen.keyAlias", "lumen")
+                keyPassword = localProps.getProperty("lumen.keyPassword")
+            }
         }
     }
 
     buildTypes {
         debug {
-            signingConfig = signingConfigs.getByName("lumen")
+            if (hasLumenKey) signingConfig = signingConfigs.getByName("lumen")
         }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("lumen")
+            signingConfig = if (hasLumenKey) signingConfigs.getByName("lumen") else signingConfigs.getByName("debug")
         }
     }
 

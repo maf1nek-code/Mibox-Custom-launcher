@@ -87,7 +87,17 @@ Jeszcze niewykonane, celowo. `.\tools\diagnose.ps1` tylko odczytuje dane (pakiet
 .\gradlew.bat :app:assembleRelease
 ```
 
-Wymaga JDK 21 i Android SDK (ścieżki w `gradle.properties` i `local.properties`). Klucz podpisu jest w `signing\` — zachowaj go, bo aktualizacja podpisana innym kluczem wymaga odinstalowania launchera.
+Wymaga JDK 21 i Android SDK (ścieżki w `gradle.properties` i `local.properties`).
+
+Klucz podpisu nie jest w repozytorium. Żeby podpisywać własnym kluczem, połóż go w `signing\lumen.keystore` i dopisz hasła do `local.properties`:
+
+```properties
+lumen.storePassword=...
+lumen.keyAlias=lumen
+lumen.keyPassword=...
+```
+
+Bez tego build użyje domyślnego klucza debug. Zachowaj swój klucz – aktualizacja podpisana innym kluczem wymaga odinstalowania launchera.
 
 ## Struktura
 
