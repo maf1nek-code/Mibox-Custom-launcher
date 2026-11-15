@@ -1,95 +1,97 @@
-# Lumen — launcher dla Mi Box S (MDZ-22-AB)
+# Lumen — launcher for the Mi Box S (MDZ-22-AB)
 
-Ekran główny dla Android TV 8.1/9 inspirowany tvOS: fotograficzne tło, rząd ulubionych, siatka aplikacji i pełny panel ustawień. Kotlin, klasyczne widoki, bez roota. Gotowy plik: `dist\Lumen-1.0.0.apk` (ok. 1,8 MB).
+A home screen for Android TV 8.1/9 inspired by tvOS: photo backdrops, a favourites row, an app grid and a full settings panel. Kotlin, classic views, no root needed. Ready-made file: `dist\Lumen-1.0.0.apk` (about 1.8 MB).
 
-## Instalacja na Mi Boxie
+The launcher's interface is in Polish. Menu names below are given as they appear in the app, with an English translation.
 
-Wszystkie polecenia uruchamiasz w PowerShellu, w folderze projektu.
+## Installing on the Mi Box
 
-1. **Włącz debugowanie na Mi Boxie.** Ustawienia → Preferencje urządzenia → Informacje → kliknij 7 razy „Kompilacja”. Potem Preferencje urządzenia → Opcje programisty → włącz „Debugowanie USB”.
-2. **Sprawdź adres IP.** Ustawienia → Sieć i internet → Twoja sieć Wi-Fi. Komputer musi być w tej samej sieci.
-3. **Zainstaluj** (na telewizorze potwierdź pytanie o debugowanie, zaznacz „Zawsze zezwalaj”):
+Run all commands in PowerShell, in the project folder.
+
+1. **Enable debugging on the Mi Box.** Settings → Device Preferences → About → click "Build" 7 times. Then Device Preferences → Developer options → turn on "USB debugging".
+2. **Find the IP address.** Settings → Network & Internet → your Wi-Fi network. The computer must be on the same network.
+3. **Install** (on the TV, accept the debugging prompt and tick "Always allow"):
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\install.ps1 -Ip 192.168.1.50
    ```
 
-   Lumen pojawi się wśród aplikacji. Fabryczny ekran główny nadal jest domyślny, więc niczym nie ryzykujesz. Przejdź listę testów poniżej.
-4. **Ustaw jako ekran główny**, gdy wszystko działa:
+   Lumen shows up among your apps. The factory home screen is still the default, so nothing is at risk. Go through the test list below.
+4. **Make it the home screen** once everything works:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\make-default.ps1
    ```
 
-   Skrypt sprawdza, czy Lumen działa, wyłącza fabryczny launcher (`pm disable-user`, nic nie jest usuwane), naciska Home i weryfikuje wynik. Jeśli Lumen nie przejmie przycisku Home, zmiana cofa się sama.
+   The script checks that Lumen runs, disables the factory launcher (`pm disable-user`, nothing is uninstalled), presses Home and verifies the result. If Lumen doesn't take over the Home button, the change rolls back by itself.
 
-Kolejne skrypty pamiętają adres urządzenia, więc `-Ip` podajesz tylko raz.
+The scripts remember the device address, so you only pass `-Ip` once.
 
-## Powrót do fabrycznego ekranu
+## Going back to the factory home screen
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\tools\restore-stock.ps1
 ```
 
-Z dopiskiem `-Uninstall` skrypt dodatkowo usuwa Lumen. To samo ręcznie, bez skryptów:
+With `-Uninstall` the script also removes Lumen. The same by hand, without scripts:
 
 ```powershell
 adb connect 192.168.1.50:5555
 adb shell pm enable com.google.android.tvlauncher
 ```
 
-Zostaw debugowanie USB włączone na stałe — to droga awaryjna. Ostateczność bez komputera: reset fabryczny Mi Boxa przywraca wszystko.
+Leave USB debugging on permanently — it's your way back. Last resort without a computer: a factory reset of the Mi Box restores everything.
 
-## Obsługa pilotem
+## Remote control
 
-| Przycisk | Działanie |
+| Button | Action |
 |---|---|
-| Strzałki | Nawigacja; w dół z ulubionych otwiera siatkę aplikacji |
-| OK | Uruchamia aplikację |
-| OK przytrzymane | Menu aplikacji: dodaj/usuń z ulubionych, przenieś, ukryj, informacje, odinstaluj |
-| Wstecz | Z siatki do ulubionych, potem na początek rzędu |
-| Home | Powrót do launchera; drugi raz — na początek ulubionych |
+| Arrows | Navigate; down from the favourites opens the app grid |
+| OK | Launch the app |
+| OK (hold) | App menu: add/remove from favourites, move, hide, info, uninstall |
+| Back | From the grid to the favourites, then to the start of the row |
+| Home | Back to the launcher; press again to go to the start of the favourites |
 
-Ustawienia launchera to kafel z zębatką (domyślnie ostatni w ulubionych). Ustawienia Android TV są w Ustawienia → Ustawienia systemu.
+The launcher's settings are the gear tile (by default the last one in the favourites). Android TV's own settings are under Ustawienia → Ustawienia systemu (Settings → System settings).
 
-## Tła
+## Backgrounds
 
-Domyślnie tłem jest jedno z siedmiu wbudowanych zdjęć górskich (Ustawienia → Tła → Wybierz tło). Autorzy i źródła są w `CREDITS.md`. Tryb „Dopasowane do aplikacji” zastępuje zdjęcie rozmytą grafiką zaznaczonej aplikacji.
+By default the background is one of seven built-in mountain photos (Ustawienia → Tła → Wybierz tło, i.e. Settings → Backgrounds → Choose background). Authors and sources are in `CREDITS.md`. The "Dopasowane do aplikacji" (matched to the app) mode replaces the photo with a blurred image of the selected app.
 
-Własne obrazy dodajesz z komputera:
+You can add your own images from the computer:
 
 ```powershell
-# tło całego ekranu (tryb „Jedno tło” → Wybierz tło)
-powershell -ExecutionPolicy Bypass -File .\tools\push-background.ps1 -Path C:\Obrazy\gory.jpg
+# background for the whole screen ("Jedno tło" / single background mode → Choose background)
+powershell -ExecutionPolicy Bypass -File .\tools\push-background.ps1 -Path C:\Pictures\mountains.jpg
 
-# tło przypisane do aplikacji (tryb „Dopasowane do aplikacji”)
-powershell -ExecutionPolicy Bypass -File .\tools\push-background.ps1 -Path C:\Obrazy\netflix.jpg -Package com.netflix.ninja
+# background tied to an app ("Dopasowane do aplikacji" / matched to the app mode)
+powershell -ExecutionPolicy Bypass -File .\tools\push-background.ps1 -Path C:\Pictures\netflix.jpg -Package com.netflix.ninja
 ```
 
-## Testy do wykonania na Mi Boxie
+## Tests to run on the Mi Box
 
-Tego nie dało się sprawdzić bez urządzenia:
+These couldn't be checked without the device:
 
-1. **Płynność.** Przejdź kilka razy po ulubionych i siatce. Jeśli animacje szarpią: Ustawienia → Wydajność → Tryb wydajności, albo Animacje i efekty → wyłącz „Przejścia tła”.
-2. **Przytrzymanie OK** na pilocie Mi Boxa otwiera menu aplikacji.
-3. **Banery prawdziwych aplikacji** (Netflix, YouTube itd.) i dopasowane do nich tła wyglądają dobrze.
-4. **Powrót z aplikacji** przyciskiem Wstecz i Home.
-5. **Restart urządzenia** po `make-default.ps1`: Lumen startuje sam.
-6. **Pamięć i klatki**: `.\tools\diagnose.ps1` zapisuje raport do `tools\state\`.
+1. **Smoothness.** Move through the favourites and the grid a few times. If animations stutter: Ustawienia → Wydajność → Tryb wydajności (Settings → Performance → Performance mode), or Animacje i efekty (Animations and effects) → turn off "Przejścia tła" (background transitions).
+2. **Holding OK** on the Mi Box remote opens the app menu.
+3. **Banners of real apps** (Netflix, YouTube etc.) and their matched backgrounds look right.
+4. **Returning from an app** with Back and Home.
+5. **Rebooting the device** after `make-default.ps1`: Lumen starts by itself.
+6. **Memory and frames**: `.\tools\diagnose.ps1` writes a report to `tools\state\`.
 
-## Odchudzanie systemu
+## Slimming down the system
 
-Jeszcze niewykonane, celowo. `.\tools\diagnose.ps1` tylko odczytuje dane (pakiety, usługi, pamięć) i zapisuje raport. Na jego podstawie powstanie lista pakietów do wyłączenia, każdy z opisem funkcji, skutków i sposobu przywrócenia. Nic nie jest wyłączane na podstawie zgadywania.
+Not done yet, on purpose. `.\tools\diagnose.ps1` only reads data (packages, services, memory) and writes a report. Based on it, a list of packages to disable will be made, each with a description of what it does, what disabling it changes and how to restore it. Nothing gets disabled based on guesses.
 
-## Budowanie
+## Building
 
 ```powershell
 .\gradlew.bat :app:assembleRelease
 ```
 
-Wymaga JDK 21 i Android SDK (ścieżki w `gradle.properties` i `local.properties`).
+Requires JDK 21 and the Android SDK (paths in `gradle.properties` and `local.properties`).
 
-Klucz podpisu nie jest w repozytorium. Żeby podpisywać własnym kluczem, połóż go w `signing\lumen.keystore` i dopisz hasła do `local.properties`:
+The signing key is not in the repository. To sign with your own key, put it in `signing\lumen.keystore` and add the passwords to `local.properties`:
 
 ```properties
 lumen.storePassword=...
@@ -97,16 +99,16 @@ lumen.keyAlias=lumen
 lumen.keyPassword=...
 ```
 
-Bez tego build użyje domyślnego klucza debug. Zachowaj swój klucz – aktualizacja podpisana innym kluczem wymaga odinstalowania launchera.
+Without them the build uses the default debug key. Keep your key safe – an update signed with a different key requires uninstalling the launcher first.
 
-## Struktura
+## Structure
 
-| Folder | Zawartość |
+| Folder | Contents |
 |---|---|
-| `app/.../home` | Ekran główny: kafle, dock, siatka, tło, menu aplikacji |
-| `app/.../settings` | Panel ustawień; strony opisane jako dane w `Pages.kt` |
-| `app/.../gfx` | Kafle, wyciąganie kolorów, generowanie teł |
-| `app/.../data` | Lista aplikacji, układ użytkownika, preferencje |
-| `app/.../sys` | Tryb awaryjny, stan ekranu głównego, start po włączeniu |
-| `demo/` | Atrapy aplikacji używane tylko do testów na emulatorze |
-| `tools/` | Skrypty instalacji, przełączania, przywracania i diagnostyki |
+| `app/.../home` | Home screen: tiles, dock, grid, backdrop, app menu |
+| `app/.../settings` | Settings panel; pages are described as data in `Pages.kt` |
+| `app/.../gfx` | Tiles, colour extraction, backdrop generation |
+| `app/.../data` | App list, user layout, preferences |
+| `app/.../sys` | Safe mode, home screen state, start on boot |
+| `demo/` | Dummy apps used only for testing on the emulator |
+| `tools/` | Scripts for installing, switching, restoring and diagnostics |

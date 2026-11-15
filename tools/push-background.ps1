@@ -1,11 +1,12 @@
 <#
 Copies an image to Lumen's backgrounds folder on the device.
 
-  .\tools\push-background.ps1 -Path C:\Obrazy\gory.jpg
-      -> available in Ustawienia > Tla > Wybierz tlo (tryb "Jedno tlo")
+  .\tools\push-background.ps1 -Path C:\Pictures\mountains.jpg
+      -> available in Ustawienia > Tla > Wybierz tlo (Settings > Backgrounds > Choose background,
+         "Jedno tlo" / single background mode)
 
-  .\tools\push-background.ps1 -Path C:\Obrazy\netflix.jpg -Package com.netflix.ninja
-      -> shown whenever that app is focused (tryb "Dopasowane do aplikacji")
+  .\tools\push-background.ps1 -Path C:\Pictures\netflix.jpg -Package com.netflix.ninja
+      -> shown whenever that app is focused ("Dopasowane do aplikacji" / matched to the app mode)
 #>
 param(
     [Parameter(Mandatory = $true)][string]$Path,
